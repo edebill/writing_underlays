@@ -20,9 +20,16 @@ class Page
   end
 
   def render
+    bottom_edge = (paper.height - guide.height) / 2
+    pdf.line [0, bottom_edge], [paper.width, bottom_edge]
+    pdf.stroke
+
+    top_edge = paper.height - ((paper.height - guide.height) / 2)
+    pdf.line [0, top_edge], [paper.width, top_edge]
+    pdf.stroke
 
     pdf.bounding_box([(paper.width - guide.width) / 2,
-                      guide.height + (paper.height - guide.height) / 2],
+                      top_edge],
                    :width => guide.width,
                    :height => guide.height) do
       pdf.stroke_bounds
@@ -38,5 +45,7 @@ class Page
       pdf.move_cursor_to 3.mm
       pdf.text "#{spacing_mm}mm", :align => :center, :size => 3.mm
     end
+
+
   end
 end
