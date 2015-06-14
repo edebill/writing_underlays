@@ -1,23 +1,22 @@
 require "prawn/graphics"
 
 class Page
-  attr_accessor :pdf, :paper, :guide, :spacing, :spacing_mm
+  attr_accessor :pdf, :paper, :guide, :spacing, :spacing_mm, :line_weight
 
-  def initialize(pdf, paper, guide, spacing_mm)
+  def initialize(pdf, paper, guide, margin_width_mm, spacing_mm, line_weight_mm)
     @pdf = pdf
     @paper = paper
     @guide = guide
     @spacing_mm = spacing_mm
     @spacing = spacing_mm.mm
+    @margin_width = margin_width_mm.mm
+    @line_weight = line_weight_mm.mm
   end
 
   def guide_margin
-    0.3.in
+    @margin_width
   end
 
-  def line_weight
-    0.1
-  end
 
   def render
     bottom_edge = (paper.height - guide.height) / 2
@@ -33,7 +32,7 @@ class Page
                    :width => guide.width,
                    :height => guide.height) do
       pdf.stroke_bounds
-      num_lines = (guide.height / spacing).to_i
+      num_lines = ((guide.height - line_weight - 6.mm) / spacing).to_i
 
       num_lines.times do |i|
         height = guide.height - (i + 1) * spacing  # count down from top
